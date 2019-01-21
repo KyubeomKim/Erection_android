@@ -1,0 +1,380 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_background"
+    tools:context="com.cybil.study.erection.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@drawable/ic_background"
+        android:baselineAligned="false">
+        <RelativeLayout
+            android:id="@+id/v_red"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="550dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="540dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="530dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="520dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="510dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="500dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="490dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="480dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="470dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="460dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:id="@+id/kyubeom"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="365dp"
+                android:src="@drawable/ic_kyubeom" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="505dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/ic_tag" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/v_green"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="550dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="540dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="530dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="520dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="510dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="500dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="490dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="480dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="470dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="460dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:id="@+id/seongsu"
+                android:layout_width="match_parent"
+                android:layout_height="183dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="345dp"
+                android:src="@drawable/ic_seongsu" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="505dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/ic_tag" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/v_blue"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="550dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="540dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="530dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="520dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="510dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="500dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="490dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="480dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="470dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="460dp"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/ic_money" />
+
+            <ImageView
+                android:id="@+id/zzangsu"
+                android:layout_width="match_parent"
+                android:layout_height="171dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="355dp"
+                android:src="@drawable/ic_zzangsu" />
+
+            <ImageView
+                android:id="@+id/tag"
+                android:layout_width="116dp"
+                android:layout_height="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="505dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/ic_tag" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/lee"
+        android:layout_width="match_parent"
+        android:layout_height="241dp"
+        app:srcCompat="@drawable/leeb" />
+
+    <Button
+        android:id="@+id/testbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+</FrameLayout>
+
