@@ -1,7 +1,9 @@
 package com.cybil.study.erection;
 
 
+import android.app.ActionBar;
 import android.content.res.Resources;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,13 +24,26 @@ import android.widget.RelativeLayout;
 import com.cybil.study.erection.util.Gambler;
 import com.plattysoft.leonids.ParticleSystem;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DashboardFragment extends Fragment {
 
+    String TAG="kyubeom";
+    int gamblerUpPixel = 26;
+    int gamblerDownPixel = -26;
+
     ImageView lee;
+    ImageView chen;
+
+    RelativeLayout kyubeomLayout;
+    RelativeLayout seongsuLayout;
+    RelativeLayout zzangsuLayout;
+
     ImageView kyubeomImage;
     ImageView seongsuImage;
     ImageView zzangsuImage;
@@ -35,10 +51,208 @@ public class DashboardFragment extends Fragment {
     Gambler kyubeom;
     Gambler seongsu;
     Gambler zzangsu;
+
+    boolean appearFlag = false;
+
     public DashboardFragment() {
         // Required empty public constructor
     }
 
+    // 애니메이션 메소드 영역
+    // 장첸 등장
+    public void chenAppear(int kyubeomStack, int seongsuStack, int zzangsuStack){
+        final int kStack = kyubeomStack;
+        final int sStack = seongsuStack;
+        final int zStack = zzangsuStack;
+
+        TranslateAnimation tAnimation = new TranslateAnimation(-1000.0f, 0.0f, 0.0f, 0.0f);
+        tAnimation.setDuration(2000);
+        tAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                loseMoney(kyubeom, kyubeomImage, R.id.v_kyubeom, kStack, false);
+                loseMoney(seongsu, seongsuImage, R.id.v_seongsu, sStack, true);
+                loseMoney(zzangsu, zzangsuImage, R.id.v_zzangsu, zStack, false);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        chen.setVisibility(View.VISIBLE);
+        chen.startAnimation(tAnimation);
+    }
+    // 장첸 퇴장
+    public void chenDisappear(){
+        TranslateAnimation tAnimation = new TranslateAnimation(0.0f, -1000.0f, 0.0f, 0.0f);
+        tAnimation.setDuration(2000);
+        chen.startAnimation(tAnimation);
+        chen.setVisibility(View.GONE);
+    }
+
+    // 이수근 등장
+    public void leeAppear(int kyubeomStack, int seongsuStack, int zzangsuStack){
+        final int kStack = kyubeomStack;
+        final int sStack = seongsuStack;
+        final int zStack = zzangsuStack;
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.lee_appear);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                getMoney(kyubeom, kyubeomImage, R.id.v_kyubeom, kStack, false);
+                getMoney(seongsu, seongsuImage, R.id.v_seongsu, sStack, true);
+                getMoney(zzangsu, zzangsuImage, R.id.v_zzangsu, zStack, false);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        lee.setVisibility(View.VISIBLE);
+        lee.startAnimation(animation);
+    }
+    // 이수근 퇴장
+    public void leeDisappear(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.lee_disappear);
+        lee.startAnimation(animation);
+    }
+    public int dpToPixel (float dp) {
+        Resources r = getResources();
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                r.getDisplayMetrics()
+        );
+        return px;
+    }
+    // 캐릭터 상하이동
+    public void moveGambler(ImageView iv, int pixel) {
+        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(iv.getLayoutParams());
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+        int result = lp.topMargin - pixel;
+
+        marginParams.setMargins(0, result, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
+        iv.setLayoutParams(layoutParams);
+    }
+
+    public void loseMoney( Gambler gambler, ImageView iv, int layout, int stack, boolean chenDisapper) {
+        final Gambler currentGambler = gambler;
+        final ImageView currentIv = iv;
+        final int currentLayoutId = layout;
+        final int currentDuration = 1000/stack;
+        final int currentStack = stack;
+        final boolean mChenDisapper = chenDisapper;
+
+        final int toStack = currentGambler.getStack() - stack;
+        final RelativeLayout currentLayout = getView().findViewById(layout);
+
+        final TranslateAnimation loseMoneyAnimation = new TranslateAnimation(0f, 0f, 0f, -2000f);
+        loseMoneyAnimation.setDuration(currentDuration);
+        loseMoneyAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(toStack<currentGambler.getStack()) {
+                    loseMoney(currentGambler, currentIv, currentLayoutId, currentStack-1, mChenDisapper);
+                } else if (mChenDisapper){
+                    chenDisappear();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        currentLayout.getChildAt(9+currentGambler.getStack()).startAnimation(loseMoneyAnimation);
+        currentLayout.removeViewAt(9+currentGambler.getStack());
+        currentGambler.addStack(-1);
+        moveGambler(iv, gamblerDownPixel);
+    }
+
+    public void getMoney( Gambler gambler, ImageView iv, int layout, int stack, boolean leeDisapper) {
+        final Gambler currentGambler = gambler;
+        final ImageView currentIv = iv;
+        final int currentLayoutId = layout;
+        final int currentDuration = 1000/stack;
+        final int currentStack = stack;
+        final boolean mLeeDisapper = leeDisapper;
+
+        final int toStack = currentGambler.getStack() + stack;
+        final RelativeLayout currentLayout = getView().findViewById(layout);
+
+        final TranslateAnimation loseMoneyAnimation = new TranslateAnimation(0f, 0f, -2000f, 0f);
+        loseMoneyAnimation.setDuration(currentDuration);
+        loseMoneyAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(toStack>currentGambler.getStack()) {
+                    getMoney(currentGambler, currentIv, currentLayoutId, currentStack-1, mLeeDisapper);
+                } else if (mLeeDisapper){
+                    leeDisappear();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        currentGambler.addStack(1);
+        createMoney(layout, currentGambler.getStack());
+        currentLayout.getChildAt(9+currentGambler.getStack()).startAnimation(loseMoneyAnimation);
+        moveGambler(iv, gamblerUpPixel);
+    }
+
+    public void createMoney(int layout, int stack) {
+        RelativeLayout currentLayout = getView().findViewById(layout);
+
+        int height = (int) getResources().getDimension(R.dimen.money_height);
+        int width = (int) getResources().getDimension(R.dimen.money_width);
+        int topMargin = dpToPixel((float) 460 - (10*stack));
+
+        ImageView newMoney = new ImageView(getContext());
+        newMoney.setLayoutParams(new ViewGroup.LayoutParams(width, height));
+        newMoney.setImageResource(R.drawable.ic_money);
+
+        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(newMoney.getLayoutParams());
+        marginParams.setMargins(0, topMargin, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+        newMoney.setLayoutParams(layoutParams);
+
+        currentLayout.addView(newMoney, 9+stack);
+    }
+
+    // 기타 메소드 영역
+
+    // 돈 삭제
+    public void deleteMoney() {
+        chenAppear(1,2,5);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,38 +269,96 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         lee = (ImageView) getView().findViewById(R.id.lee);
+        chen = (ImageView) getView().findViewById(R.id.chen);
+
         kyubeomImage = (ImageView) getView().findViewById(R.id.kyubeom);
         seongsuImage = (ImageView) getView().findViewById(R.id.seongsu);
         zzangsuImage = (ImageView) getView().findViewById(R.id.zzangsu);
 
+        kyubeomLayout = (RelativeLayout) getView().findViewById(R.id.v_kyubeom);
+        seongsuLayout = (RelativeLayout) getView().findViewById(R.id.v_seongsu);
+        zzangsuLayout = (RelativeLayout) getView().findViewById(R.id.v_zzangsu);
+
         Button testButton = (Button) getView().findViewById(R.id.testbutton);
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.lee_appear);
-        lee.startAnimation(animation);
+
+        // test 영역
+
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 이수근 사라지기
-//                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.lee_disappear);
-//                lee.startAnimation(animation);
-                // 규범 한칸 올라가기
+                if (!appearFlag) {
+                    leeAppear(3,5, 2);
+                    appearFlag = true;
 
-                float dip = 10f;
-                Resources r = getResources();
-                float px = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        dip,
-                        r.getDisplayMetrics()
-                );
+                } else {
+                    chenAppear(2,6,1);
+                    appearFlag = false;
+                }
+//                deleteMoney();
 
-//                int dimensionInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-                ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(kyubeomImage.getLayoutParams());
-                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) kyubeomImage.getLayoutParams();
-                int result = lp.topMargin - 26;
+            }
+        });
 
-                marginParams.setMargins(0, result, 0, 0);
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                kyubeomImage.setLayoutParams(layoutParams);
+        kyubeomImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                kyubeom.addStack(1);
+                moveGambler(kyubeomImage, gamblerUpPixel);
+                createMoney(R.id.v_kyubeom, kyubeom.getStack());
+                Log.d(TAG, "onClick: kyubeom's stack: " + kyubeom.getStack());
+            }
+        });
 
+        kyubeomImage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                moveGambler(kyubeomImage, gamblerDownPixel);
+                kyubeom.addStack(-1);
+//                deleteMoney(R.id.v_kyubeom, kyubeom.getStack(), 1000);
+                Log.d(TAG, "onClick: kyubeom's stack: " + kyubeom.getStack());
+                return true;
+            }
+        });
+
+        seongsuImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                seongsu.addStack(1);
+                moveGambler(seongsuImage, gamblerUpPixel);
+                createMoney(R.id.v_seongsu, seongsu.getStack());
+                Log.d(TAG, "onClick: seongsu's stack: " + seongsu.getStack());
+            }
+        });
+
+        seongsuImage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                moveGambler(seongsuImage, gamblerDownPixel);
+                seongsu.addStack(-1);
+//                deleteMoney(R.id.v_seongsu, seongsu.getStack(),1000);
+                Log.d(TAG, "onClick: seongsu's stack: " + seongsu.getStack());
+                return true;
+            }
+        });
+
+        zzangsuImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zzangsu.addStack(1);
+                moveGambler(zzangsuImage, gamblerUpPixel);
+                createMoney(R.id.v_zzangsu, zzangsu.getStack());
+                Log.d(TAG, "onClick: zzangsu's stack: " + zzangsu.getStack());
+            }
+        });
+
+        zzangsuImage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                moveGambler(zzangsuImage, gamblerDownPixel);
+                zzangsu.addStack(-1);
+//                deleteMoney(R.id.v_zzangsu, zzangsu.getStack(), 1000);
+                Log.d(TAG, "onClick: zzangsu's stack: " + zzangsu.getStack());
+                return true;
             }
         });
     }

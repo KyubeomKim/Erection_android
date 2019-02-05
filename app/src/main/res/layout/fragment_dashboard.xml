@@ -13,7 +13,7 @@
         android:background="@drawable/ic_background"
         android:baselineAligned="false">
         <RelativeLayout
-            android:id="@+id/v_red"
+            android:id="@+id/v_kyubeom"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -130,7 +130,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/v_green"
+            android:id="@+id/v_seongsu"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -246,7 +246,7 @@
 
         </RelativeLayout>
         <RelativeLayout
-            android:id="@+id/v_blue"
+            android:id="@+id/v_zzangsu"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -368,7 +368,16 @@
         android:id="@+id/lee"
         android:layout_width="match_parent"
         android:layout_height="241dp"
+        android:visibility="gone"
         app:srcCompat="@drawable/leeb" />
+
+    <ImageView
+        android:id="@+id/chen"
+        android:layout_width="286dp"
+        android:layout_height="284dp"
+        android:scaleType="fitEnd"
+        android:src="@drawable/chen"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/testbutton"

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="money_width">116dp</dimen>
+    <dimen name="money_height">126dp</dimen>
+    <dimen name="test">450dp</dimen>
+</resources>
