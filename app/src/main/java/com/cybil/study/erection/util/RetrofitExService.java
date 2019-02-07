@@ -21,4 +21,8 @@ public interface RetrofitExService {
     @FormUrlEncoded
     @POST("totalupdate")
     Call<Data> setTotalBalance(@FieldMap HashMap<String, Object> param);
+
+    @FormUrlEncoded
+    @POST("insert")
+    Call<Data> setSeed(@FieldMap HashMap<String, Object> param);
 }

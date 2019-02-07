@@ -22,6 +22,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,6 +56,8 @@ public class DashboardFragment extends Fragment {
 
     ImageView lee;
     ImageView chen;
+
+    LinearLayout dashboardLayout;
 
     RelativeLayout kyubeomLayout;
     RelativeLayout seongsuLayout;
@@ -145,6 +148,20 @@ public class DashboardFragment extends Fragment {
 
     public void setTotalBalance(HashMap<String, Object> payload) {
         retrofitExService.setTotalBalance(payload).enqueue(new Callback<Data> () {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                getDashboardData();
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+                Log.d("kyubeom", "fail");
+            }
+        });
+    }
+
+    public void setSeed(HashMap<String, Object> payload) {
+        retrofitExService.setSeed(payload).enqueue(new Callback<Data> () {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
                 getDashboardData();
@@ -359,26 +376,49 @@ public class DashboardFragment extends Fragment {
 
     public int setStack(Gambler gambler, int profit) {
         int stack = gambler.getStack();
-        int stackDelta =(profit/valueOfStack) - stack;
+        int newStack =(profit/valueOfStack);
 
-        if(stackDelta <= 0) {
-            if (stack == 0) {
-                return 0;
-            } else {
-                return -stack;
-            }
+        if(newStack < 0) {
+            return -stack;
+        } else {
+            return newStack-stack;
         }
-        return stackDelta;
-//            gambler.setStack(0);
-//            return 0;
-//        if(gambler.getStack()>0) {
-//            int stack = gambler.getStack();
-////            gambler.setStack(profit/valueOfStack);
-//            return (profit/valueOfStack) - stack;
-//        }else {
-//            gambler.setStack(0);
-//            return 0;
-//        }
+    }
+
+    // 팝업 설정 메소드
+    public void setChangeDialog() {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("무언가가 바뀌었다..");       // 제목 설정
+        currentDialog.setMessage("무엇을.. 변경하시겠습니까?");   // 내용 설정
+
+        currentDialog.setPositiveButton("현재금액", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setCurrentDialog();
+
+                dialog.dismiss();
+            }
+        });
+
+        currentDialog.setNeutralButton("수수료", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        currentDialog.setNegativeButton("자본금", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setSeedDialog();
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
     }
 
     public void setCurrentDialog() {
@@ -403,6 +443,60 @@ public class DashboardFragment extends Fragment {
                 payload.put("total", value);
 
                 setTotalBalance(payload);
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
+    }
+
+    public void setSeedDialog() {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("돈을..");       // 제목 설정
+        currentDialog.setMessage("더 넣으시게요?");   // 내용 설정
+
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+
+        final EditText kb = new EditText(getContext());
+        kb.setHint("규범");
+        layout.addView(kb);
+        final EditText ss = new EditText(getContext());
+        ss.setHint("성수");
+        layout.addView(ss);
+        final EditText zs = new EditText(getContext());
+        zs.setHint("짱수");
+        layout.addView(zs);
+
+        currentDialog.setView(layout);
+
+        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                String kbSeed = kb.getText().toString();
+                String ssSeed = ss.getText().toString();
+                String zsSeed = zs.getText().toString();
+
+                HashMap<String, Object> payload = new HashMap<>();
+                payload.put("player1", kbSeed);
+                payload.put("player2", zsSeed);
+                payload.put("player3", ssSeed);
+
+                setSeed(payload);
 
                 dialog.dismiss();     //닫기
                 // Event
@@ -449,6 +543,8 @@ public class DashboardFragment extends Fragment {
         seongsuImage = (ImageView) getView().findViewById(R.id.seongsu);
         zzangsuImage = (ImageView) getView().findViewById(R.id.zzangsu);
 
+        dashboardLayout = (LinearLayout) getView().findViewById(R.id.dashboard_layout);
+
         kyubeomLayout = (RelativeLayout) getView().findViewById(R.id.v_kyubeom);
         seongsuLayout = (RelativeLayout) getView().findViewById(R.id.v_seongsu);
         zzangsuLayout = (RelativeLayout) getView().findViewById(R.id.v_zzangsu);
@@ -494,10 +590,18 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        dashboardLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                setChangeDialog();
+                return true;
+            }
+        });
+
         currentBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setCurrentDialog();
+                setChangeDialog();
             }
         });
 
