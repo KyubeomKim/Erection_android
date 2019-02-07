@@ -117,15 +117,97 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="365dp"
                 android:src="@drawable/ic_kyubeom" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="116dp"
-                android:layout_height="126dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="505dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/ic_tag" />
+                <ImageView
+                    android:id="@+id/kyubeom_tag"
+                    android:layout_width="116dp"
+                    android:layout_height="126dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="505dp"
+                    android:layout_marginEnd="7dp"
+                    android:src="@drawable/ic_tag" />
+
+                <TextView
+                    android:id="@+id/kyubeom_seed"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/kyubeom_tag"
+                    android:layout_alignLeft="@+id/kyubeom_tag"
+                    android:layout_alignRight="@+id/kyubeom_tag"
+                    android:layout_alignTop="@+id/kyubeom_tag"
+                    android:layout_marginBottom="75dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="25dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/kyubeom_rate"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/kyubeom_tag"
+                    android:layout_alignLeft="@+id/kyubeom_tag"
+                    android:layout_alignRight="@+id/kyubeom_tag"
+                    android:layout_alignTop="@+id/kyubeom_tag"
+                    android:layout_marginBottom="55dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="45dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/kyubeom_balance"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/kyubeom_tag"
+                    android:layout_alignLeft="@+id/kyubeom_tag"
+                    android:layout_alignRight="@+id/kyubeom_tag"
+                    android:layout_alignTop="@+id/kyubeom_tag"
+                    android:layout_marginBottom="35dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="65dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/kyubeom_profit"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/kyubeom_tag"
+                    android:layout_alignLeft="@+id/kyubeom_tag"
+                    android:layout_alignRight="@+id/kyubeom_tag"
+                    android:layout_alignTop="@+id/kyubeom_tag"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="85dp"
+                    android:gravity="left"
+                    android:text="0"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -235,14 +317,97 @@
                 android:layout_marginTop="345dp"
                 android:src="@drawable/ic_seongsu" />
 
-            <ImageView
-                android:layout_width="116dp"
-                android:layout_height="126dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="505dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/ic_tag" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/seongsu_tag"
+                    android:layout_width="116dp"
+                    android:layout_height="126dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="505dp"
+                    android:layout_marginEnd="7dp"
+                    android:src="@drawable/ic_tag" />
+
+                <TextView
+                    android:id="@+id/seongsu_seed"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/seongsu_tag"
+                    android:layout_alignLeft="@+id/seongsu_tag"
+                    android:layout_alignRight="@+id/seongsu_tag"
+                    android:layout_alignTop="@+id/seongsu_tag"
+                    android:layout_marginBottom="75dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="25dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/seongsu_rate"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/seongsu_tag"
+                    android:layout_alignLeft="@+id/seongsu_tag"
+                    android:layout_alignRight="@+id/seongsu_tag"
+                    android:layout_alignTop="@+id/seongsu_tag"
+                    android:layout_marginBottom="55dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="45dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/seongsu_balance"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/seongsu_tag"
+                    android:layout_alignLeft="@+id/seongsu_tag"
+                    android:layout_alignRight="@+id/seongsu_tag"
+                    android:layout_alignTop="@+id/seongsu_tag"
+                    android:layout_marginBottom="35dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="65dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/seongsu_profit"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/seongsu_tag"
+                    android:layout_alignLeft="@+id/seongsu_tag"
+                    android:layout_alignRight="@+id/seongsu_tag"
+                    android:layout_alignTop="@+id/seongsu_tag"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="85dp"
+                    android:gravity="left"
+                    android:text="0"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
         </RelativeLayout>
         <RelativeLayout
@@ -351,16 +516,97 @@
                 android:layout_marginTop="355dp"
                 android:src="@drawable/ic_zzangsu" />
 
-            <ImageView
-                android:id="@+id/tag"
-                android:layout_width="116dp"
-                android:layout_height="126dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="505dp"
-                android:layout_marginEnd="7dp"
-                android:src="@drawable/ic_tag" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/zzangsu_tag"
+                    android:layout_width="116dp"
+                    android:layout_height="126dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="505dp"
+                    android:layout_marginEnd="7dp"
+                    android:src="@drawable/ic_tag" />
+
+                <TextView
+                    android:id="@+id/zzangsu_seed"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/zzangsu_tag"
+                    android:layout_alignLeft="@+id/zzangsu_tag"
+                    android:layout_alignRight="@+id/zzangsu_tag"
+                    android:layout_alignTop="@+id/zzangsu_tag"
+                    android:layout_marginBottom="75dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="25dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/zzangsu_rate"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/zzangsu_tag"
+                    android:layout_alignLeft="@+id/zzangsu_tag"
+                    android:layout_alignRight="@+id/zzangsu_tag"
+                    android:layout_alignTop="@+id/zzangsu_tag"
+                    android:layout_marginBottom="55dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="45dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/zzangsu_balance"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/zzangsu_tag"
+                    android:layout_alignLeft="@+id/zzangsu_tag"
+                    android:layout_alignRight="@+id/zzangsu_tag"
+                    android:layout_alignTop="@+id/zzangsu_tag"
+                    android:layout_marginBottom="35dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="65dp"
+                    android:gravity="left"
+                    android:text="자본금"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/zzangsu_profit"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/zzangsu_tag"
+                    android:layout_alignLeft="@+id/zzangsu_tag"
+                    android:layout_alignRight="@+id/zzangsu_tag"
+                    android:layout_alignTop="@+id/zzangsu_tag"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="85dp"
+                    android:gravity="left"
+                    android:text="0"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 
@@ -383,6 +629,15 @@
         android:id="@+id/testbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/current_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         android:text="Button" />
 
 </FrameLayout>

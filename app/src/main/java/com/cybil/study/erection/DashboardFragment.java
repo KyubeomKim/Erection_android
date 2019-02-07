@@ -2,6 +2,8 @@ package com.cybil.study.erection;
 
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.media.Image;
 import android.os.Bundle;
@@ -18,14 +20,27 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.cybil.study.erection.util.Dashboard;
+import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.Gambler;
+import com.cybil.study.erection.util.RetrofitExService;
 import com.plattysoft.leonids.ParticleSystem;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -36,6 +51,7 @@ public class DashboardFragment extends Fragment {
     String TAG="kyubeom";
     int gamblerUpPixel = 26;
     int gamblerDownPixel = -26;
+    int valueOfStack = 10;
 
     ImageView lee;
     ImageView chen;
@@ -48,15 +64,99 @@ public class DashboardFragment extends Fragment {
     ImageView seongsuImage;
     ImageView zzangsuImage;
 
+    TextView kyubeomSeed;
+    TextView kyubeomRate;
+    TextView kyubeomBalance;
+    TextView kyubeomProfit;
+
+    TextView seongsuSeed;
+    TextView seongsuRate;
+    TextView seongsuBalance;
+    TextView seongsuProfit;
+
+    TextView zzangsuSeed;
+    TextView zzangsuRate;
+    TextView zzangsuBalance;
+    TextView zzangsuProfit;
+
+    Button currentBalanceButton;
+    AlertDialog.Builder currentDialog;
+
+
     Gambler kyubeom;
     Gambler seongsu;
     Gambler zzangsu;
+
+    Retrofit retrofit;
+    RetrofitExService retrofitExService;
 
     boolean appearFlag = false;
 
     public DashboardFragment() {
         // Required empty public constructor
     }
+
+    // API 호출 메소드
+    public void getDashboardData() {
+        retrofitExService.getDashboardData().enqueue(new Callback<List<Dashboard>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Dashboard>> call, @NonNull Response<List<Dashboard>> response) {
+                Log.d("kyubeom", "good");
+                if (response.isSuccessful()) {
+                    List<Dashboard> body =  response.body();
+                    if (body != null) {
+                        Log.d("kyubeom", body.toString());
+                        kyubeomSeed.setText(Integer.toString((int) body.get(0).getSeed()));
+                        kyubeomRate.setText(String.valueOf(body.get(0).getRate()));
+                        kyubeomBalance.setText(Integer.toString((int) body.get(0).getBalance()));
+                        kyubeomProfit.setText(Integer.toString((int) body.get(0).getProfit()));
+
+                        seongsuSeed.setText(Integer.toString((int) body.get(2).getSeed()));
+                        seongsuRate.setText(String.valueOf( body.get(2).getRate()));
+                        seongsuBalance.setText(Integer.toString((int) body.get(2).getBalance()));
+                        seongsuProfit.setText(Integer.toString((int) body.get(2).getProfit()));
+
+                        zzangsuSeed.setText(Integer.toString((int) body.get(1).getSeed()));
+                        zzangsuRate.setText(String.valueOf( body.get(1).getRate()));
+                        zzangsuBalance.setText(Integer.toString((int) body.get(1).getBalance()));
+                        zzangsuProfit.setText(Integer.toString((int) body.get(1).getProfit()));
+
+                        int kyubeomStackDelta = setStack(kyubeom, Integer.parseInt(kyubeomProfit.getText().toString()));
+                        int seongsuStackDelta = setStack(seongsu, Integer.parseInt(seongsuProfit.getText().toString()));
+                        int zzangsuStackDelta = setStack(zzangsu, Integer.parseInt(zzangsuProfit.getText().toString()));
+
+                        if (kyubeomStackDelta > 0 || seongsuStackDelta > 0 || zzangsuStackDelta > 0) {
+                            leeAppear(kyubeomStackDelta, seongsuStackDelta, zzangsuStackDelta);
+                        } else if (kyubeomStackDelta < 0 || seongsuStackDelta < 0 || zzangsuStackDelta < 0) {
+                            chenAppear(Math.abs(kyubeomStackDelta), Math.abs(seongsuStackDelta), Math.abs(zzangsuStackDelta));
+                        }
+
+                        currentBalanceButton.setText(Integer.toString((int) body.get(4).getSeed()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Dashboard>> call, @NonNull Throwable t) {
+                Log.d("kyubeom", "fail");
+            }
+        });
+    }
+
+    public void setTotalBalance(HashMap<String, Object> payload) {
+        retrofitExService.setTotalBalance(payload).enqueue(new Callback<Data> () {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                getDashboardData();
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+                Log.d("kyubeom", "fail");
+            }
+        });
+    }
+
 
     // 애니메이션 메소드 영역
     // 장첸 등장
@@ -149,81 +249,85 @@ public class DashboardFragment extends Fragment {
     }
 
     public void loseMoney( Gambler gambler, ImageView iv, int layout, int stack, boolean chenDisapper) {
-        final Gambler currentGambler = gambler;
-        final ImageView currentIv = iv;
-        final int currentLayoutId = layout;
-        final int currentDuration = 1000/stack;
-        final int currentStack = stack;
-        final boolean mChenDisapper = chenDisapper;
+        if(stack != 0){
+            final Gambler currentGambler = gambler;
+            final ImageView currentIv = iv;
+            final int currentLayoutId = layout;
+            final int currentDuration = 1000/stack;
+            final int currentStack = stack;
+            final boolean mChenDisapper = chenDisapper;
 
-        final int toStack = currentGambler.getStack() - stack;
-        final RelativeLayout currentLayout = getView().findViewById(layout);
+            final int toStack = currentGambler.getStack() - stack;
+            final RelativeLayout currentLayout = getView().findViewById(layout);
 
-        final TranslateAnimation loseMoneyAnimation = new TranslateAnimation(0f, 0f, 0f, -2000f);
-        loseMoneyAnimation.setDuration(currentDuration);
-        loseMoneyAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+            final TranslateAnimation loseMoneyAnimation = new TranslateAnimation(0f, 0f, 0f, -2000f);
+            loseMoneyAnimation.setDuration(currentDuration);
+            loseMoneyAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if(toStack<currentGambler.getStack()) {
-                    loseMoney(currentGambler, currentIv, currentLayoutId, currentStack-1, mChenDisapper);
-                } else if (mChenDisapper){
-                    chenDisappear();
                 }
-            }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if(toStack<currentGambler.getStack()) {
+                        loseMoney(currentGambler, currentIv, currentLayoutId, currentStack-1, mChenDisapper);
+                    } else if (mChenDisapper){
+                        chenDisappear();
+                    }
+                }
 
-            }
-        });
-        currentLayout.getChildAt(9+currentGambler.getStack()).startAnimation(loseMoneyAnimation);
-        currentLayout.removeViewAt(9+currentGambler.getStack());
-        currentGambler.addStack(-1);
-        moveGambler(iv, gamblerDownPixel);
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            currentLayout.getChildAt(9+currentGambler.getStack()).startAnimation(loseMoneyAnimation);
+            currentLayout.removeViewAt(9+currentGambler.getStack());
+            currentGambler.addStack(-1);
+            moveGambler(iv, gamblerDownPixel);
+        }
     }
 
     public void getMoney( Gambler gambler, ImageView iv, int layout, int stack, boolean leeDisapper) {
-        final Gambler currentGambler = gambler;
-        final ImageView currentIv = iv;
-        final int currentLayoutId = layout;
-        final int currentDuration = 1000/stack;
-        final int currentStack = stack;
-        final boolean mLeeDisapper = leeDisapper;
+        if(stack != 0){
+            final Gambler currentGambler = gambler;
+            final ImageView currentIv = iv;
+            final int currentLayoutId = layout;
+            final int currentDuration = 1000/stack;
+            final int currentStack = stack;
+            final boolean mLeeDisapper = leeDisapper;
 
-        final int toStack = currentGambler.getStack() + stack;
-        final RelativeLayout currentLayout = getView().findViewById(layout);
+            final int toStack = currentGambler.getStack() + stack;
+            final RelativeLayout currentLayout = getView().findViewById(layout);
 
-        final TranslateAnimation loseMoneyAnimation = new TranslateAnimation(0f, 0f, -2000f, 0f);
-        loseMoneyAnimation.setDuration(currentDuration);
-        loseMoneyAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+            final TranslateAnimation loseMoneyAnimation = new TranslateAnimation(0f, 0f, -2000f, 0f);
+            loseMoneyAnimation.setDuration(currentDuration);
+            loseMoneyAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if(toStack>currentGambler.getStack()) {
-                    getMoney(currentGambler, currentIv, currentLayoutId, currentStack-1, mLeeDisapper);
-                } else if (mLeeDisapper){
-                    leeDisappear();
                 }
-            }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    moveGambler(currentIv, gamblerUpPixel);
+                    if(toStack>currentGambler.getStack()) {
+                        getMoney(currentGambler, currentIv, currentLayoutId, currentStack-1, mLeeDisapper);
+                    } else if (mLeeDisapper){
+                        leeDisappear();
+                    }
+                }
 
-            }
-        });
-        currentGambler.addStack(1);
-        createMoney(layout, currentGambler.getStack());
-        currentLayout.getChildAt(9+currentGambler.getStack()).startAnimation(loseMoneyAnimation);
-        moveGambler(iv, gamblerUpPixel);
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            currentGambler.addStack(1);
+            createMoney(layout, currentGambler.getStack());
+            currentLayout.getChildAt(9+currentGambler.getStack()).startAnimation(loseMoneyAnimation);
+        }
     }
 
     public void createMoney(int layout, int stack) {
@@ -249,10 +353,73 @@ public class DashboardFragment extends Fragment {
 
     // 기타 메소드 영역
 
-    // 돈 삭제
-    public void deleteMoney() {
-        chenAppear(1,2,5);
+    public void judgmentTime() {
+
     }
+
+    public int setStack(Gambler gambler, int profit) {
+        int stack = gambler.getStack();
+        int stackDelta =(profit/valueOfStack) - stack;
+
+        if(stackDelta <= 0) {
+            if (stack == 0) {
+                return 0;
+            } else {
+                return -stack;
+            }
+        }
+        return stackDelta;
+//            gambler.setStack(0);
+//            return 0;
+//        if(gambler.getStack()>0) {
+//            int stack = gambler.getStack();
+////            gambler.setStack(profit/valueOfStack);
+//            return (profit/valueOfStack) - stack;
+//        }else {
+//            gambler.setStack(0);
+//            return 0;
+//        }
+    }
+
+    public void setCurrentDialog() {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("지금 우리는..");       // 제목 설정
+        currentDialog.setMessage("얼마를 가지고 있나요?");   // 내용 설정
+
+        final EditText et = new EditText(getContext());
+        currentDialog.setView(et);
+
+        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                String value = et.getText().toString();
+                Log.v(TAG, value);
+
+                HashMap<String, Object> payload = new HashMap<>();
+                payload.put("total", value);
+
+                setTotalBalance(payload);
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -261,6 +428,13 @@ public class DashboardFragment extends Fragment {
         kyubeom = new Gambler(0);
         seongsu = new Gambler(0);
         zzangsu = new Gambler(0);
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(RetrofitExService.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofitExService = retrofit.create(RetrofitExService.class);
+
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
@@ -279,7 +453,28 @@ public class DashboardFragment extends Fragment {
         seongsuLayout = (RelativeLayout) getView().findViewById(R.id.v_seongsu);
         zzangsuLayout = (RelativeLayout) getView().findViewById(R.id.v_zzangsu);
 
+        kyubeomSeed = getView().findViewById(R.id.kyubeom_seed);
+        kyubeomBalance = getView().findViewById(R.id.kyubeom_balance);
+        kyubeomRate = getView().findViewById(R.id.kyubeom_rate);
+        kyubeomProfit = getView().findViewById(R.id.kyubeom_profit);
+
+        seongsuSeed = getView().findViewById(R.id.seongsu_seed);
+        seongsuBalance = getView().findViewById(R.id.seongsu_balance);
+        seongsuRate = getView().findViewById(R.id.seongsu_rate);
+        seongsuProfit = getView().findViewById(R.id.seongsu_profit);
+
+        zzangsuSeed = getView().findViewById(R.id.zzangsu_seed);
+        zzangsuBalance = getView().findViewById(R.id.zzangsu_balance);
+        zzangsuRate = getView().findViewById(R.id.zzangsu_rate);
+        zzangsuProfit = getView().findViewById(R.id.zzangsu_profit);
+
+        currentBalanceButton = getView().findViewById(R.id.current_balance);
+
         Button testButton = (Button) getView().findViewById(R.id.testbutton);
+
+
+
+        getDashboardData();
 
         // test 영역
 
@@ -296,6 +491,13 @@ public class DashboardFragment extends Fragment {
                 }
 //                deleteMoney();
 
+            }
+        });
+
+        currentBalanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCurrentDialog();
             }
         });
 

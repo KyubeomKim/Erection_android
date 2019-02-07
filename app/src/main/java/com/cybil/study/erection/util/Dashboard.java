@@ -23,6 +23,6 @@ public class Dashboard {
     public float getSeed() {return seed;}
     public float getRate() {return rate;}
     public float getBalance() {return balance;}
-    public float getProfit() {return balance;}
-    public float getTotalProfit() {return balance;}
+    public float getProfit() {return profit;}
+    public float getTotalProfit() {return totalProfit;}
 }
