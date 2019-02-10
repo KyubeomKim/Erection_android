@@ -1,6 +1,7 @@
 package com.cybil.study.erection;
 
-import android.media.Image;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,9 +10,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.VideoView;
 
 import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.RetrofitExService;
@@ -26,17 +28,40 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     ImageView iv;
+    VideoView vv;
+    RelativeLayout mainLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainLayout = findViewById(R.id.main_layout);
+
         ViewPager viewPager = findViewById(R.id.vp_pager);
 
-        Fragment[] arrFragments = new Fragment[3];
+        final Fragment[] arrFragments = new Fragment[3];
         arrFragments[0] = new DashboardFragment();
         arrFragments[1] = new CalculateFragment();
         arrFragments[2] = new YellowFragment();
+
+        vv = findViewById(R.id.opening);
+
+        String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.dotnam_opening;
+        Uri uri = Uri.parse(uriPath);
+
+
+        vv.setVideoURI(uri);
+        vv.requestFocus();
+        vv.start();
+        vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                arrFragments[0].getView().findViewById(R.id.dashboard_layout).setBackground(getDrawable(R.drawable.ic_background));
+                vv.setVisibility(View.GONE);
+            }
+        });
+
 
         MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), arrFragments);
         viewPager.setAdapter(adapter);

@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.media.Image;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
@@ -81,6 +84,8 @@ public class DashboardFragment extends Fragment {
     TextView zzangsuRate;
     TextView zzangsuBalance;
     TextView zzangsuProfit;
+
+    VideoView vv;
 
     Button currentBalanceButton;
     AlertDialog.Builder currentDialog;
@@ -352,7 +357,7 @@ public class DashboardFragment extends Fragment {
 
         int height = (int) getResources().getDimension(R.dimen.money_height);
         int width = (int) getResources().getDimension(R.dimen.money_width);
-        int topMargin = dpToPixel((float) 460 - (10*stack));
+        int topMargin = dpToPixel((float) 490 - (10*stack));
 
         ImageView newMoney = new ImageView(getContext());
         newMoney.setLayoutParams(new ViewGroup.LayoutParams(width, height));
@@ -568,8 +573,6 @@ public class DashboardFragment extends Fragment {
 
         Button testButton = (Button) getView().findViewById(R.id.testbutton);
 
-
-
         getDashboardData();
 
         // test 영역
@@ -585,8 +588,6 @@ public class DashboardFragment extends Fragment {
                     chenAppear(2,6,1);
                     appearFlag = false;
                 }
-//                deleteMoney();
-
             }
         });
 
