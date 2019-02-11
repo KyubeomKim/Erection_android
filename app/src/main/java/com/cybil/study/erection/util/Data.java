@@ -1,11 +1,14 @@
 package com.cybil.study.erection.util;
 
 public class Data {
-    private final String result;
+    private final boolean result;
+    private final String message;
 
-    public Data(String result) {
+    public Data(boolean result, String message) {
         this.result = result;
+        this.message = message;
     }
 
-    public String getResult() {return result;}
+    public boolean getResult() {return result;}
+    public String getMessage() {return message;}
 }

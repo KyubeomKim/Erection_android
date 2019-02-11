@@ -28,7 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     ImageView iv;
-    VideoView vv;
     RelativeLayout mainLayout;
 
     @Override
@@ -44,23 +43,6 @@ public class MainActivity extends AppCompatActivity {
         arrFragments[0] = new DashboardFragment();
         arrFragments[1] = new CalculateFragment();
         arrFragments[2] = new YellowFragment();
-
-        vv = findViewById(R.id.opening);
-
-        String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.dotnam_opening;
-        Uri uri = Uri.parse(uriPath);
-
-
-        vv.setVideoURI(uri);
-        vv.requestFocus();
-        vv.start();
-        vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                arrFragments[0].getView().findViewById(R.id.dashboard_layout).setBackground(getDrawable(R.drawable.ic_background));
-                vv.setVisibility(View.GONE);
-            }
-        });
 
 
         MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), arrFragments);
