@@ -4,6 +4,7 @@ package com.cybil.study.erection;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.Gambler;
 import com.cybil.study.erection.util.RetrofitExService;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class DashboardFragment extends Fragment {
     int gamblerUpPixel = 26;
     int gamblerDownPixel = -26;
     int valueOfStack = 10;
+    int priceOfTicket = 300;
+    int priceOfHotel = priceOfTicket + 70;
 
     ImageView lee;
     ImageView chen;
@@ -61,6 +65,14 @@ public class DashboardFragment extends Fragment {
     ImageView kyubeomImage;
     ImageView seongsuImage;
     ImageView zzangsuImage;
+
+    ImageView kyubeomAirplane;
+    ImageView seongsuAirplane;
+    ImageView zzangsuAirplane;
+
+    ImageView kyubeomHotel;
+    ImageView seongsuHotel;
+    ImageView zzangsuHotel;
 
     TextView kyubeomSeed;
     TextView kyubeomRate;
@@ -97,6 +109,24 @@ public class DashboardFragment extends Fragment {
     }
 
     // API 호출 메소드
+
+    public void getCheckInit() {
+        retrofitExService.getCheckInit().enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                if(response.body().getResult()) {
+                    getDashboardData();
+                } else {
+                    Log.d(TAG, "need to create file.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+
+            }
+        });
+    }
     public void getDashboardData() {
         retrofitExService.getDashboardData().enqueue(new Callback<List<Dashboard>>() {
             @Override
@@ -120,6 +150,9 @@ public class DashboardFragment extends Fragment {
                         zzangsuRate.setText(String.valueOf( body.get(1).getRate()));
                         zzangsuBalance.setText(Integer.toString((int) body.get(1).getBalance()));
                         zzangsuProfit.setText(Integer.toString((int) body.get(1).getProfit()));
+
+                        int[] profitList = {Integer.parseInt(kyubeomProfit.getText().toString()), Integer.parseInt(seongsuProfit.getText().toString()), Integer.parseInt(zzangsuProfit.getText().toString())};
+                        setTrophy(profitList);
 
                         int kyubeomStackDelta = setStack(kyubeom, Integer.parseInt(kyubeomProfit.getText().toString()));
                         int seongsuStackDelta = setStack(seongsu, Integer.parseInt(seongsuProfit.getText().toString()));
@@ -171,6 +204,17 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    public void setCommission(HashMap<String, Object> payload) {
+        retrofitExService.setCommission(payload).enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) { getDashboardData(); }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+
+            }
+        });
+    }
 
     // 애니메이션 메소드 영역
     // 장첸 등장
@@ -178,6 +222,8 @@ public class DashboardFragment extends Fragment {
         final int kStack = kyubeomStack;
         final int sStack = seongsuStack;
         final int zStack = zzangsuStack;
+        int[] array = {kStack, sStack, zStack};
+        final int maxValueIndex = getMaxValue(array);
 
         TranslateAnimation tAnimation = new TranslateAnimation(-1000.0f, 0.0f, 0.0f, 0.0f);
         tAnimation.setDuration(2000);
@@ -189,9 +235,9 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                loseMoney(kyubeom, kyubeomImage, R.id.v_kyubeom, kStack, false);
-                loseMoney(seongsu, seongsuImage, R.id.v_seongsu, sStack, true);
-                loseMoney(zzangsu, zzangsuImage, R.id.v_zzangsu, zStack, false);
+                loseMoney(kyubeom, kyubeomImage, R.id.v_kyubeom, kStack, maxValueIndex == 0 ? true : false);
+                loseMoney(seongsu, seongsuImage, R.id.v_seongsu, sStack, maxValueIndex == 1 ? true : false);
+                loseMoney(zzangsu, zzangsuImage, R.id.v_zzangsu, zStack, maxValueIndex == 2 ? true : false);
             }
 
             @Override
@@ -215,6 +261,9 @@ public class DashboardFragment extends Fragment {
         final int kStack = kyubeomStack;
         final int sStack = seongsuStack;
         final int zStack = zzangsuStack;
+        int[] array = {kStack, sStack, zStack};
+        final int maxValueIndex = getMaxValue(array);
+
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.lee_appear);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -224,9 +273,9 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                getMoney(kyubeom, kyubeomImage, R.id.v_kyubeom, kStack, false);
-                getMoney(seongsu, seongsuImage, R.id.v_seongsu, sStack, true);
-                getMoney(zzangsu, zzangsuImage, R.id.v_zzangsu, zStack, false);
+                getMoney(kyubeom, kyubeomImage, R.id.v_kyubeom, kStack, maxValueIndex == 0 ? true : false);
+                getMoney(seongsu, seongsuImage, R.id.v_seongsu, sStack, maxValueIndex == 1 ? true : false);
+                getMoney(zzangsu, zzangsuImage, R.id.v_zzangsu, zStack, maxValueIndex == 2 ? true : false);
             }
 
             @Override
@@ -367,8 +416,41 @@ public class DashboardFragment extends Fragment {
 
     // 기타 메소드 영역
 
-    public void judgmentTime() {
+    public int getMaxValue(int[] array) {
+        int max = array[0]; //최대값
+//        int min = array[0]; //최소값
+        int maxIndex = 0;
 
+        for(int i=0;i<array.length;i++) {
+            if(max<array[i]) {
+                //max의 값보다 array[i]이 크면 max = array[i]
+                max = array[i];
+                maxIndex = i;
+            }
+//            if(min>array[i]) {
+//                //min의 값보다 array[i]이 작으면 min = array[i]
+//                min = array[i];
+//            }
+        }
+        return maxIndex;
+    }
+
+    public void setTrophy(int[] array) {
+        ImageView[] airplaneList = {kyubeomAirplane, seongsuAirplane, zzangsuAirplane};
+        ImageView[] hotelList = {kyubeomHotel, seongsuHotel, zzangsuHotel};
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] >= priceOfTicket) {
+                airplaneList[i].setVisibility(View.VISIBLE);
+                if (array[i] >= priceOfHotel){
+                    hotelList[i].setVisibility(View.VISIBLE);
+                } else {
+                    hotelList[i].setVisibility(View.GONE);
+                }
+            } else {
+                airplaneList[i].setVisibility(View.GONE);
+                hotelList[i].setVisibility(View.GONE);
+            }
+        }
     }
 
     public int setStack(Gambler gambler, int profit) {
@@ -393,7 +475,6 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setCurrentDialog();
-
                 dialog.dismiss();
             }
         });
@@ -401,9 +482,8 @@ public class DashboardFragment extends Fragment {
         currentDialog.setNeutralButton("수수료", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                setCommissionDialog();
                 dialog.dismiss();     //닫기
-                // Event
             }
         });
 
@@ -412,7 +492,6 @@ public class DashboardFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 setSeedDialog();
                 dialog.dismiss();     //닫기
-                // Event
             }
         });
         currentDialog.show();
@@ -440,6 +519,45 @@ public class DashboardFragment extends Fragment {
                 payload.put("total", value);
 
                 setTotalBalance(payload);
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
+    }
+
+    public void setCommissionDialog() {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("짱수를");       // 제목 설정
+        currentDialog.setMessage("구해라!");   // 내용 설정
+
+        final EditText et = new EditText(getContext());
+        currentDialog.setView(et);
+
+        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                String value = et.getText().toString();
+                Log.v(TAG, value);
+
+                HashMap<String, Object> payload = new HashMap<>();
+                payload.put("commission", value);
+
+                setCommission(payload);
 
                 dialog.dismiss();     //닫기
                 // Event
@@ -540,6 +658,14 @@ public class DashboardFragment extends Fragment {
         seongsuImage = (ImageView) getView().findViewById(R.id.seongsu);
         zzangsuImage = (ImageView) getView().findViewById(R.id.zzangsu);
 
+        kyubeomAirplane = (ImageView) getView().findViewById(R.id.kyubeom_airplane);
+        seongsuAirplane = (ImageView) getView().findViewById(R.id.seongsu_airplane);
+        zzangsuAirplane = (ImageView) getView().findViewById(R.id.zzangsu_airplane);
+
+        kyubeomHotel = (ImageView) getView().findViewById(R.id.kyubeom_hotel);
+        seongsuHotel = (ImageView) getView().findViewById(R.id.seongsu_hotel);
+        zzangsuHotel = (ImageView) getView().findViewById(R.id.zzangsu_hotel);
+
         dashboardLayout = (LinearLayout) getView().findViewById(R.id.dashboard_layout);
 
         kyubeomLayout = (RelativeLayout) getView().findViewById(R.id.v_kyubeom);
@@ -565,7 +691,7 @@ public class DashboardFragment extends Fragment {
 
         Button testButton = (Button) getView().findViewById(R.id.testbutton);
 
-        getDashboardData();
+        getCheckInit();
 
         // test 영역
 

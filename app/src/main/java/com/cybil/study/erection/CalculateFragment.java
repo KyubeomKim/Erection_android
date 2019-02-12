@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.cybil.study.erection.util.Calculate;
 import com.cybil.study.erection.util.Dashboard;
+import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.RetrofitExService;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A simple {@link Fragment} subclass.
  */
 public class CalculateFragment extends Fragment {
+    String TAG="kyubeom";
     TextView kyubeomMoney;
     TextView seongsuMoney;
     TextView zzangsuMoney;
@@ -64,6 +67,20 @@ public class CalculateFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Calculate>> call, Throwable t) {
                 Log.d("kyubeom", "fail");
+            }
+        });
+    }
+
+    public void calculate(HashMap<String, Object> payload) {
+        retrofitExService.Calculate(payload).enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                Log.d(TAG, "fuck");
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+
             }
         });
     }
