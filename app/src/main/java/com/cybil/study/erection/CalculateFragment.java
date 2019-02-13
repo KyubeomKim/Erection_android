@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.RetrofitExService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,9 +39,15 @@ public class CalculateFragment extends Fragment {
     TextView seongsuMoney;
     TextView zzangsuMoney;
 
+    EditText kyubeomRealMoney;
+    EditText seongsuRealMoney;
+    EditText zzangsuRealMoney;
+
     TextView kyubeomDifference;
     TextView seongsuDifference;
     TextView zzangsuDifference;
+
+    Button calculateButton;
 
     Retrofit retrofit;
     RetrofitExService retrofitExService;
@@ -75,12 +84,12 @@ public class CalculateFragment extends Fragment {
         retrofitExService.Calculate(payload).enqueue(new Callback<Data>() {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
-                Log.d(TAG, "fuck");
+                getCalculateData();
             }
 
             @Override
             public void onFailure(Call<Data> call, Throwable t) {
-
+                Log.d("kyubeom", "fail");
             }
         });
     }
@@ -113,9 +122,31 @@ public class CalculateFragment extends Fragment {
         seongsuMoney = getView().findViewById(R.id.seongsu_money);
         zzangsuMoney = getView().findViewById(R.id.zzangsu_money);
 
+        kyubeomRealMoney = getView().findViewById(R.id.kyubeom_real_money);
+        seongsuRealMoney = getView().findViewById(R.id.seongsu_real_money);
+        zzangsuRealMoney = getView().findViewById(R.id.zzangsu_real_money);
+
         kyubeomDifference = getView().findViewById(R.id.kyubeom_difference);
         seongsuDifference = getView().findViewById(R.id.seongsu_difference);
         zzangsuDifference = getView().findViewById(R.id.zzangsu_difference);
+
+        calculateButton = getView().findViewById(R.id.calculate);
+
+        calculateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                HashMap<String, Object> payload = new HashMap<>();
+                payload.put("player0", kyubeomRealMoney.getText().toString());
+                payload.put("player1", zzangsuRealMoney.getText().toString());
+                payload.put("player2", seongsuRealMoney.getText().toString());
+
+                SimpleDateFormat s = new SimpleDateFormat("yy-MM-dd hh-mm");
+                payload.put("filename", s.format(new Date()));
+                calculate(payload);
+
+            }
+        });
 
         getCalculateData();
 

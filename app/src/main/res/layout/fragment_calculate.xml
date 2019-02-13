@@ -87,6 +87,7 @@
                 android:textSize="24sp" />
 
             <EditText
+                android:id="@+id/kyubeom_real_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
@@ -132,6 +133,7 @@
                 android:textSize="24sp" />
 
             <EditText
+                android:id="@+id/seongsu_real_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
@@ -177,6 +179,7 @@
                 android:textSize="24sp" />
 
             <EditText
+                android:id="@+id/zzangsu_real_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
