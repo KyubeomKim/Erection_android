@@ -1,22 +1,29 @@
 package com.cybil.study.erection;
 
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.cybil.study.erection.util.Calculate;
 import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
+import com.cybil.study.erection.util.Report;
 import com.cybil.study.erection.util.RetrofitExService;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,6 +54,11 @@ public class CalculateFragment extends Fragment {
     TextView seongsuDifference;
     TextView zzangsuDifference;
 
+    TableRow reportLabel;
+    TableRow reportKyubeom;
+    TableRow reportSeongsu;
+    TableRow reportZzangsu;
+
     Button calculateButton;
 
     Retrofit retrofit;
@@ -76,6 +88,30 @@ public class CalculateFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Calculate>> call, Throwable t) {
                 Log.d("kyubeom", "fail");
+            }
+        });
+    }
+
+    public void getReport() {
+        retrofitExService.getReport().enqueue(new Callback<List<Report>>() {
+            @Override
+            public void onResponse(Call<List<Report>> call, Response<List<Report>> response) {
+                TableRow[] tr = {reportLabel, reportKyubeom, reportSeongsu, reportZzangsu};
+                Log.d(TAG, "test");
+//                for (int i=0; i<response.body().size(); i++) {
+//                    TextView tv = new TextView(getContext());
+//                    tv.setText(response.body().get(i).getDate());
+//                    tv.setGravity(View.TEXT_ALIGNMENT_CENTER);
+//                    tv.setTypeface(Typeface.create("nougat_extrablack_webfont", Typeface.NORMAL));
+//                    tv.setTextColor(Color.BLACK);
+//                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+//                    reportLabel.addView(tv, i+2);
+//                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Report>> call, Throwable t) {
+                Log.d(TAG, "test");
             }
         });
     }
@@ -130,6 +166,11 @@ public class CalculateFragment extends Fragment {
         seongsuDifference = getView().findViewById(R.id.seongsu_difference);
         zzangsuDifference = getView().findViewById(R.id.zzangsu_difference);
 
+        reportLabel = getView().findViewById(R.id.report_label);
+        reportKyubeom = getView().findViewById(R.id.report_kyubeom);
+        reportSeongsu = getView().findViewById(R.id.report_seongsu);
+        reportZzangsu = getView().findViewById(R.id.report_zzangsu);
+
         calculateButton = getView().findViewById(R.id.calculate);
 
         calculateButton.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +190,6 @@ public class CalculateFragment extends Fragment {
         });
 
         getCalculateData();
-
-
+        getReport();
     }
 }

@@ -418,19 +418,13 @@ public class DashboardFragment extends Fragment {
 
     public int getMaxValue(int[] array) {
         int max = array[0]; //최대값
-//        int min = array[0]; //최소값
         int maxIndex = 0;
 
         for(int i=0;i<array.length;i++) {
             if(max<array[i]) {
-                //max의 값보다 array[i]이 크면 max = array[i]
                 max = array[i];
                 maxIndex = i;
             }
-//            if(min>array[i]) {
-//                //min의 값보다 array[i]이 작으면 min = array[i]
-//                min = array[i];
-//            }
         }
         return maxIndex;
     }

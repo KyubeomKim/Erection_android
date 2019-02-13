@@ -18,8 +18,15 @@ public interface RetrofitExService {
     @GET("calculate")
     Call<List<Calculate>> getCalculateData();
 
+    @GET("report")
+    Call<List<Report>> getReport();
+
     @GET("checkinit")
     Call<Data> getCheckInit();
+
+    @FormUrlEncoded
+    @POST("initdata")
+    Call<Data> initData(@FieldMap HashMap<String, Object> param);
 
     @FormUrlEncoded
     @POST("totalupdate")

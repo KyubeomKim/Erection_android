@@ -16,8 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.cybil.study.erection.util.Dashboard;
+import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.RetrofitExService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,8 +31,49 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+    String TAG = "kyubeom";
     ImageView iv;
     RelativeLayout mainLayout;
+
+    ViewPager viewPager;
+    MyPagerAdapter adapter;
+
+    RetrofitExService retrofitExService;
+    Retrofit retrofit;
+
+    public void getCheckInit() {
+        retrofitExService.getCheckInit().enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                if(response.body().getResult()) {
+                    viewPager.setAdapter(adapter);
+                } else {
+                    HashMap<String, Object> payload = new HashMap<>();
+                    SimpleDateFormat s = new SimpleDateFormat("yy-MM-dd hh-mm");
+                    payload.put("filename", s.format(new Date()));
+                    initData(payload);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+
+            }
+        });
+    }
+    public void initData(HashMap<String, Object> payload) {
+        retrofitExService.initData(payload).enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                viewPager.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+                Log.d(TAG, "failed");
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,40 +82,21 @@ public class MainActivity extends AppCompatActivity {
 
         mainLayout = findViewById(R.id.main_layout);
 
-        ViewPager viewPager = findViewById(R.id.vp_pager);
+        viewPager = findViewById(R.id.vp_pager);
 
         final Fragment[] arrFragments = new Fragment[3];
         arrFragments[0] = new DashboardFragment();
         arrFragments[1] = new CalculateFragment();
         arrFragments[2] = new YellowFragment();
 
+        adapter = new MyPagerAdapter(getSupportFragmentManager(), arrFragments);
 
-        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), arrFragments);
-        viewPager.setAdapter(adapter);
-
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(RetrofitExService.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        RetrofitExService retrofitExService = retrofit.create(RetrofitExService.class);
-
-        retrofitExService.getDashboardData().enqueue(new Callback<List<Dashboard>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Dashboard>> call, @NonNull Response<List<Dashboard>> response) {
-                Log.d("kyubeom", "good");
-                if (response.isSuccessful()) {
-                    List<Dashboard> body =  response.body();
-                    if (body != null) {
-                        Log.d("kyubeom", body.toString());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<Dashboard>> call, @NonNull Throwable t) {
-                Log.d("kyubeom", "fail");
-            }
-        });
+        retrofitExService = retrofit.create(RetrofitExService.class);
+        getCheckInit();
 
     }
 
