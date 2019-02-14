@@ -2,7 +2,6 @@ package com.cybil.study.erection;
 
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.cybil.study.erection.util.Calculate;
-import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.Report;
 import com.cybil.study.erection.util.RetrofitExService;
@@ -64,6 +63,10 @@ public class CalculateFragment extends Fragment {
     TableRow reportKyubeom;
     TableRow reportSeongsu;
     TableRow reportZzangsu;
+
+    TextView kyubeomTotalProfit;
+    TextView seongsuTotalProfit;
+    TextView zzangsuTotalProfit;
 
     Button calculateButton;
 
@@ -120,15 +123,53 @@ public class CalculateFragment extends Fragment {
             public void onResponse(Call<List<Report>> call, Response<List<Report>> response) {
                 TableRow[] tr = {reportLabel, reportKyubeom, reportSeongsu, reportZzangsu};
                 Log.d(TAG, "test");
-//                for (int i=0; i<response.body().size(); i++) {
-//                    TextView tv = new TextView(getContext());
-//                    tv.setText(response.body().get(i).getDate());
-//                    tv.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                    tv.setTypeface(Typeface.create("nougat_extrablack_webfont", Typeface.NORMAL));
-//                    tv.setTextColor(Color.BLACK);
-//                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-//                    reportLabel.addView(tv, i+2);
-//                }
+                if ((reportLabel.getVirtualChildCount()-2) < response.body().size() ){
+                    for (int i=(reportLabel.getVirtualChildCount()-2); i<response.body().size(); i++) {
+                        TextView tv = new TextView(getContext());
+                        tv.setText(response.body().get(i).getDate());
+                        tv.setGravity(Gravity.CENTER);
+                        tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
+                        tv.setTextColor(Color.BLACK);
+                        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        reportLabel.addView(tv, i+1);
+
+                        TextView kbtv = new TextView(getContext());
+                        kbtv.setText(String.valueOf(response.body().get(i).getTotalProfit().getPlayer0()));
+                        kbtv.setGravity(Gravity.CENTER);
+                        kbtv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
+                        kbtv.setTextColor(Color.BLACK);
+                        kbtv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        reportKyubeom.addView(kbtv, i+1);
+
+                        TextView sstv = new TextView(getContext());
+                        sstv.setText(String.valueOf(response.body().get(i).getTotalProfit().getPlayer2()));
+                        sstv.setGravity(Gravity.CENTER);
+                        sstv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
+                        sstv.setTextColor(Color.BLACK);
+                        sstv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        reportSeongsu.addView(sstv, i+1);
+
+                        TextView zstv = new TextView(getContext());
+                        zstv.setText(String.valueOf(response.body().get(i).getTotalProfit().getPlayer1()));
+                        zstv.setGravity(Gravity.CENTER);
+                        zstv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
+                        zstv.setTextColor(Color.BLACK);
+                        zstv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        reportZzangsu.addView(zstv, i+1);
+                    }
+                } else {
+                    for (int i=0; i<response.body().size(); i++) {
+                        TextView tv = (TextView) reportLabel.getVirtualChildAt(i+1);
+                        TextView kbtv = (TextView) reportKyubeom.getVirtualChildAt(i+1);
+                        TextView sstv = (TextView) reportSeongsu.getVirtualChildAt(i+1);
+                        TextView zstv = (TextView) reportZzangsu.getVirtualChildAt(i+1);
+
+                        tv.setText(response.body().get(i).getDate());
+                        kbtv.setText(String.valueOf(response.body().get(i).getTotalProfit().getPlayer0()));
+                        sstv.setText(String.valueOf(response.body().get(i).getTotalProfit().getPlayer2()));
+                        zstv.setText(String.valueOf(response.body().get(i).getTotalProfit().getPlayer1()));
+                    }
+                }
             }
 
             @Override
@@ -161,7 +202,8 @@ public class CalculateFragment extends Fragment {
         currentDialog.setMessage("구해라!");   // 내용 설정
 
         final EditText et = new EditText(getContext());
-        et.setInputType(InputType.TYPE_CLASS_NUMBER);
+        et.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
         currentDialog.setView(et);
 
         currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
@@ -251,7 +293,6 @@ public class CalculateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         retrofit = new Retrofit.Builder()
                 .baseUrl(RetrofitExService.URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -282,6 +323,10 @@ public class CalculateFragment extends Fragment {
         reportKyubeom = getView().findViewById(R.id.report_kyubeom);
         reportSeongsu = getView().findViewById(R.id.report_seongsu);
         reportZzangsu = getView().findViewById(R.id.report_zzangsu);
+
+        kyubeomTotalProfit = getView().findViewById(R.id.kyubeom_total_profit);
+        seongsuTotalProfit = getView().findViewById(R.id.seongsu_total_profit);
+        zzangsuTotalProfit = getView().findViewById(R.id.zzangsu_total_profit);
 
         calculateButton = getView().findViewById(R.id.calculate);
 

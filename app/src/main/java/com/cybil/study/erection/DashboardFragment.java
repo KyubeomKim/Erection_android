@@ -3,8 +3,9 @@ package com.cybil.study.erection;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,15 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.cybil.study.erection.util.Calculate;
 import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.Gambler;
 import com.cybil.study.erection.util.RetrofitExService;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +40,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.view.View.GONE;
 
 
 /**
@@ -60,7 +59,10 @@ public class DashboardFragment extends Fragment {
     int priceOfHotel = priceOfTicket + 100;
     int[] kyubeomStatusValueList = {-300, -200, -80, -10, 100, 200, 350, 500};
     int[] seongsuStatusValueList = {-200, -150, -100, -50, 200, 400, 800, 1000};
-    int[] zzangsuStatusValueList = {-400, -280, -160 -40, 80, 200, 320, 440};
+    int[] zzangsuStatusValueList = {-400, -280, -160, -40, 80, 200, 320, 440};
+    boolean kyubeomKey = false;
+    boolean seongsuKey = false;
+    boolean zzangsuKey = false;
 
     ImageView lee;
     ImageView chen;
@@ -111,6 +113,8 @@ public class DashboardFragment extends Fragment {
     Retrofit retrofit;
     RetrofitExService retrofitExService;
 
+    MediaPlayer mediaPlayer;
+
     boolean appearFlag = false;
 
     public DashboardFragment() {
@@ -149,19 +153,22 @@ public class DashboardFragment extends Fragment {
                         kyubeomRate.setText(String.valueOf(body.get(0).getRate()));
                         kyubeomBalance.setText(Integer.toString((int) body.get(0).getBalance()));
                         kyubeomProfit.setText(Integer.toString((int) body.get(0).getProfit()));
-                        setStatus(kyubeom, kyubeomProfit);
+                        CalculateFragment.getInstance().kyubeomTotalProfit.setText(Integer.toString((int) body.get(0).getTotalProfit()));
+                        setStatus(kyubeom, CalculateFragment.getInstance().kyubeomTotalProfit);
 
                         seongsuSeed.setText(Integer.toString((int) body.get(2).getSeed()));
                         seongsuRate.setText(String.valueOf( body.get(2).getRate()));
                         seongsuBalance.setText(Integer.toString((int) body.get(2).getBalance()));
                         seongsuProfit.setText(Integer.toString((int) body.get(2).getProfit()));
-                        setStatus(seongsu, seongsuProfit);
+                        CalculateFragment.getInstance().seongsuTotalProfit.setText(Integer.toString((int) body.get(2).getTotalProfit()));
+                        setStatus(seongsu, CalculateFragment.getInstance().seongsuTotalProfit);
 
                         zzangsuSeed.setText(Integer.toString((int) body.get(1).getSeed()));
                         zzangsuRate.setText(String.valueOf( body.get(1).getRate()));
                         zzangsuBalance.setText(Integer.toString((int) body.get(1).getBalance()));
                         zzangsuProfit.setText(Integer.toString((int) body.get(1).getProfit()));
-                        setStatus(zzangsu, zzangsuProfit);
+                        CalculateFragment.getInstance().zzangsuTotalProfit.setText(Integer.toString((int) body.get(1).getTotalProfit()));
+                        setStatus(zzangsu, CalculateFragment.getInstance().zzangsuTotalProfit);
 
                         int[] profitList = {Integer.parseInt(kyubeomProfit.getText().toString()), Integer.parseInt(seongsuProfit.getText().toString()), Integer.parseInt(zzangsuProfit.getText().toString())};
                         setTrophy(profitList);
@@ -258,7 +265,7 @@ public class DashboardFragment extends Fragment {
         TranslateAnimation tAnimation = new TranslateAnimation(0.0f, -1000.0f, 0.0f, 0.0f);
         tAnimation.setDuration(2000);
         chen.startAnimation(tAnimation);
-        chen.setVisibility(View.GONE);
+        chen.setVisibility(GONE);
     }
 
     // 이수근 등장
@@ -398,6 +405,31 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    public void flyToTheSky(final ImageView iv) {
+        final TranslateAnimation flyToTheSkyAnimation = new TranslateAnimation(0f, 0f, 0f, -2000f);
+        flyToTheSkyAnimation.setDuration(1500);
+        flyToTheSkyAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (kyubeomImage.getVisibility() == GONE && seongsuImage.getVisibility() == GONE && zzangsuImage.getVisibility() == GONE) {
+                    startActivity(new Intent(getContext(), EndingActivity.class));
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        iv.startAnimation(flyToTheSkyAnimation);
+        iv.setVisibility(GONE);
+    }
+
     public void createMoney(int layout, int stack) {
         RelativeLayout currentLayout = getView().findViewById(layout);
 
@@ -443,11 +475,11 @@ public class DashboardFragment extends Fragment {
                 if (array[i] >= priceOfHotel){
                     hotelList[i].setVisibility(View.VISIBLE);
                 } else {
-                    hotelList[i].setVisibility(View.GONE);
+                    hotelList[i].setVisibility(GONE);
                 }
             } else {
-                airplaneList[i].setVisibility(View.GONE);
-                hotelList[i].setVisibility(View.GONE);
+                airplaneList[i].setVisibility(GONE);
+                hotelList[i].setVisibility(GONE);
             }
         }
     }
@@ -467,7 +499,12 @@ public class DashboardFragment extends Fragment {
         int totalProfit = Integer.valueOf(tv.getText().toString());
         for (int i=0; i < gambler.getStatusList().length; i++) {
             if(totalProfit < gambler.getStatusValueList()[i]) {
-                gambler.setStatus(gambler.getStatusList()[i]);
+                double ran = Math.random();
+                if(ran<=0.05) {
+                    gambler.setStatus(gambler.getHint());
+                }else {
+                    gambler.setStatus(gambler.getStatusList()[i]);
+                }
                 Log.d(TAG, "gambler's status:" + gambler.getStatus());
                 break;
             }
@@ -539,7 +576,7 @@ public class DashboardFragment extends Fragment {
         currentDialog.show();
     }
 
-    public void setStatusDialog(Gambler gambler) {
+    public void setStatusDialog(final Gambler gambler) {
         currentDialog = new AlertDialog.Builder(getContext());
 
         currentDialog.setTitle("상태 확인");       // 제목 설정
@@ -555,7 +592,20 @@ public class DashboardFragment extends Fragment {
                 // Text 값 받아서 로그 남기기
                 String value = et.getText().toString();
                 Log.v(TAG, value);
-
+                if(value.equals(gambler.getKey())) {
+                    gambler.setFindKey(true);
+                    if(kyubeom.isFindKey() && seongsu.isFindKey() && zzangsu.isFindKey()) {
+                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.find_key);
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mediaPlayer) {
+                                mediaPlayer.stop();
+                                mediaPlayer.release();
+                            }
+                        });
+                        mediaPlayer.start();
+                    }
+                }
                 dialog.dismiss();     //닫기
                 // Event
             }
@@ -639,9 +689,9 @@ public class DashboardFragment extends Fragment {
         String[] zzangsuStatusList = {getString(R.string.status_1_zzangsu), getString(R.string.status_2_zzangsu), getString(R.string.status_3_zzangsu), getString(R.string.status_4_zzangsu), getString(R.string.status_5_zzangsu), getString(R.string.status_6_zzangsu), getString(R.string.status_7_zzangsu), getString(R.string.status_8_zzangsu)};
 
 
-        kyubeom = new Gambler(0, getString(R.string.default_status_kyubeom), kyubeomStatusList, kyubeomStatusValueList);
-        seongsu = new Gambler(0, getString(R.string.default_status_seongsu), seongsuStatusList, seongsuStatusValueList);
-        zzangsu = new Gambler(0, getString(R.string.default_status_zzangsu), zzangsuStatusList, zzangsuStatusValueList);
+        kyubeom = new Gambler(0, getString(R.string.default_status_kyubeom), kyubeomStatusList, kyubeomStatusValueList, getString(R.string.hint_kyubeom), "do");
+        seongsu = new Gambler(0, getString(R.string.default_status_seongsu), seongsuStatusList, seongsuStatusValueList, getString(R.string.hint_seongsu), "tn");
+        zzangsu = new Gambler(0, getString(R.string.default_status_zzangsu), zzangsuStatusList, zzangsuStatusValueList, getString(R.string.hint_zzangsu), "am");
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(RetrofitExService.URL)
@@ -729,46 +779,53 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-//        kyubeomImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                kyubeom.addStack(1);
-//                moveGambler(kyubeomImage, gamblerUpPixel);
-//                createMoney(R.id.v_kyubeom, kyubeom.getStack());
-//                Log.d(TAG, "onClick: kyubeom's stack: " + kyubeom.getStack());
-//            }
-//        });
+        kyubeomImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(kyubeom.isFindKey() && seongsu.isFindKey() && zzangsu.isFindKey()) {
+                    flyToTheSky(kyubeomImage);
+                }
+            }
+        });
 
         kyubeomImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-//                setStatusDialog(kyubeom);
+                setStatusDialog(kyubeom);
                 return true;
             }
         });
 
-//        seongsuImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//            }
-//        });
+        seongsuImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(kyubeom.isFindKey() && seongsu.isFindKey() && zzangsu.isFindKey()) {
+                    flyToTheSky(seongsuImage);
+                }
+            }
+        });
 
         seongsuImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                setStatusDialog(seongsu);
                 return true;
             }
         });
 
-//        zzangsuImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//            }
-//        });
+        zzangsuImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(kyubeom.isFindKey() && seongsu.isFindKey() && zzangsu.isFindKey()) {
+                    flyToTheSky(zzangsuImage);
+                }
+            }
+        });
 
         zzangsuImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                setStatusDialog(zzangsu);
                 return true;
             }
         });
