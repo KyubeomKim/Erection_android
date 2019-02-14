@@ -1,6 +1,9 @@
 package com.cybil.study.erection;
 
 
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -41,6 +44,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A simple {@link Fragment} subclass.
  */
 public class CalculateFragment extends Fragment {
+    private static CalculateFragment calculateFragmentInstance;
+
     String TAG="kyubeom";
     TextView kyubeomMoney;
     TextView seongsuMoney;
@@ -63,6 +68,8 @@ public class CalculateFragment extends Fragment {
 
     Retrofit retrofit;
     RetrofitExService retrofitExService;
+
+    AlertDialog.Builder currentDialog;
 
     public void getCalculateData() {
         retrofitExService.getCalculateData().enqueue(new Callback<List<Calculate>>() {
@@ -88,6 +95,20 @@ public class CalculateFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Calculate>> call, Throwable t) {
                 Log.d("kyubeom", "fail");
+            }
+        });
+    }
+
+    public void setCommission(HashMap<String, Object> payload) {
+        retrofitExService.setCommission(payload).enqueue(new Callback<Data>() {
+            @Override
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                setStackValueDialog();
+            }
+
+            @Override
+            public void onFailure(Call<Data> call, Throwable t) {
+
             }
         });
     }
@@ -120,7 +141,8 @@ public class CalculateFragment extends Fragment {
         retrofitExService.Calculate(payload).enqueue(new Callback<Data>() {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
-                getCalculateData();
+                setCommissionDialog();
+//                getCalculateData();
             }
 
             @Override
@@ -130,10 +152,97 @@ public class CalculateFragment extends Fragment {
         });
     }
 
+
+    public void setCommissionDialog() {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("짱수를");       // 제목 설정
+        currentDialog.setMessage("구해라!");   // 내용 설정
+
+        final EditText et = new EditText(getContext());
+        currentDialog.setView(et);
+
+        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                String value = et.getText().toString();
+                Log.v(TAG, value);
+
+                HashMap<String, Object> payload = new HashMap<>();
+                payload.put("commission", value);
+
+                setCommission(payload);
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
+    }
+
+    public void setStackValueDialog() {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("돈 한뭉치는");       // 제목 설정
+        currentDialog.setMessage("얼마입니까?");   // 내용 설정
+
+        final EditText et = new EditText(getContext());
+        currentDialog.setView(et);
+
+        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG, "Yes Btn Click");
+
+                // Text 값 받아서 로그 남기기
+                String value = et.getText().toString().equals("") ? "10" : et.getText().toString();
+
+                DashboardFragment.valueOfStack=Integer.valueOf(value);
+                getCalculateData();
+                getReport();
+                DashboardFragment.getInstance().getDashboardData();
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+
+        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG,"No Btn Click");
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
+    }
+
     public CalculateFragment() {
         // Required empty public constructor
     }
 
+    public static CalculateFragment getInstance() {
+        return calculateFragmentInstance;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        calculateFragmentInstance = this;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

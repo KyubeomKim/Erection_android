@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.cybil.study.erection.util.Calculate;
 import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.Gambler;
@@ -46,10 +47,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class DashboardFragment extends Fragment {
 
+    public static int valueOfStack = 10;
+    private static DashboardFragment dashboardFragmentInstance;
+
     String TAG="kyubeom";
     int gamblerUpPixel = 26;
     int gamblerDownPixel = -26;
-    int valueOfStack = 10;
     int priceOfTicket = 300;
     int priceOfHotel = priceOfTicket + 70;
 
@@ -181,6 +184,8 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
                 getDashboardData();
+                CalculateFragment.getInstance().getCalculateData();
+                CalculateFragment.getInstance().getReport();
             }
 
             @Override
@@ -195,6 +200,8 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
                 getDashboardData();
+                CalculateFragment.getInstance().getCalculateData();
+                CalculateFragment.getInstance().getReport();
             }
 
             @Override
@@ -204,17 +211,6 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    public void setCommission(HashMap<String, Object> payload) {
-        retrofitExService.setCommission(payload).enqueue(new Callback<Data>() {
-            @Override
-            public void onResponse(Call<Data> call, Response<Data> response) { getDashboardData(); }
-
-            @Override
-            public void onFailure(Call<Data> call, Throwable t) {
-
-            }
-        });
-    }
 
     // 애니메이션 메소드 영역
     // 장첸 등장
@@ -473,14 +469,6 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        currentDialog.setNeutralButton("수수료", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setCommissionDialog();
-                dialog.dismiss();     //닫기
-            }
-        });
-
         currentDialog.setNegativeButton("자본금", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -530,44 +518,44 @@ public class DashboardFragment extends Fragment {
         currentDialog.show();
     }
 
-    public void setCommissionDialog() {
-        currentDialog = new AlertDialog.Builder(getContext());
-
-        currentDialog.setTitle("짱수를");       // 제목 설정
-        currentDialog.setMessage("구해라!");   // 내용 설정
-
-        final EditText et = new EditText(getContext());
-        currentDialog.setView(et);
-
-        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.v(TAG, "Yes Btn Click");
-
-                // Text 값 받아서 로그 남기기
-                String value = et.getText().toString();
-                Log.v(TAG, value);
-
-                HashMap<String, Object> payload = new HashMap<>();
-                payload.put("commission", value);
-
-                setCommission(payload);
-
-                dialog.dismiss();     //닫기
-                // Event
-            }
-        });
-
-        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.v(TAG,"No Btn Click");
-                dialog.dismiss();     //닫기
-                // Event
-            }
-        });
-        currentDialog.show();
-    }
+//    public void setCommissionDialog() {
+//        currentDialog = new AlertDialog.Builder(getContext());
+//
+//        currentDialog.setTitle("짱수를");       // 제목 설정
+//        currentDialog.setMessage("구해라!");   // 내용 설정
+//
+//        final EditText et = new EditText(getContext());
+//        currentDialog.setView(et);
+//
+//        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Log.v(TAG, "Yes Btn Click");
+//
+//                // Text 값 받아서 로그 남기기
+//                String value = et.getText().toString();
+//                Log.v(TAG, value);
+//
+//                HashMap<String, Object> payload = new HashMap<>();
+//                payload.put("commission", value);
+//
+//                setCommission(payload);
+//
+//                dialog.dismiss();     //닫기
+//                // Event
+//            }
+//        });
+//
+//        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Log.v(TAG,"No Btn Click");
+//                dialog.dismiss();     //닫기
+//                // Event
+//            }
+//        });
+//        currentDialog.show();
+//    }
 
     public void setSeedDialog() {
         currentDialog = new AlertDialog.Builder(getContext());
@@ -623,6 +611,15 @@ public class DashboardFragment extends Fragment {
         currentDialog.show();
     }
 
+    public static DashboardFragment getInstance() {
+        return dashboardFragmentInstance;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dashboardFragmentInstance = this;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
