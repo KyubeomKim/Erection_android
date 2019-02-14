@@ -56,8 +56,8 @@ public class DashboardFragment extends Fragment {
     String TAG="kyubeom";
     int gamblerUpPixel = 26;
     int gamblerDownPixel = -26;
-    int priceOfTicket = 300;
-    int priceOfHotel = priceOfTicket + 70;
+    int priceOfTicket = 320;
+    int priceOfHotel = priceOfTicket + 100;
     int[] kyubeomStatusValueList = {-300, -200, -80, -10, 100, 200, 350, 500};
     int[] seongsuStatusValueList = {-200, -150, -100, -50, 200, 400, 800, 1000};
     int[] zzangsuStatusValueList = {-400, -280, -160 -40, 80, 200, 320, 440};
