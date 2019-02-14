@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -30,6 +31,8 @@ import com.cybil.study.erection.util.Dashboard;
 import com.cybil.study.erection.util.Data;
 import com.cybil.study.erection.util.Gambler;
 import com.cybil.study.erection.util.RetrofitExService;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -55,6 +58,9 @@ public class DashboardFragment extends Fragment {
     int gamblerDownPixel = -26;
     int priceOfTicket = 300;
     int priceOfHotel = priceOfTicket + 70;
+    int[] kyubeomStatusValueList = {-300, -200, -80, -10, 100, 200, 350, 500};
+    int[] seongsuStatusValueList = {-200, -150, -100, -50, 200, 400, 800, 1000};
+    int[] zzangsuStatusValueList = {-400, -280, -160 -40, 80, 200, 320, 440};
 
     ImageView lee;
     ImageView chen;
@@ -143,16 +149,19 @@ public class DashboardFragment extends Fragment {
                         kyubeomRate.setText(String.valueOf(body.get(0).getRate()));
                         kyubeomBalance.setText(Integer.toString((int) body.get(0).getBalance()));
                         kyubeomProfit.setText(Integer.toString((int) body.get(0).getProfit()));
+                        setStatus(kyubeom, kyubeomProfit);
 
                         seongsuSeed.setText(Integer.toString((int) body.get(2).getSeed()));
                         seongsuRate.setText(String.valueOf( body.get(2).getRate()));
                         seongsuBalance.setText(Integer.toString((int) body.get(2).getBalance()));
                         seongsuProfit.setText(Integer.toString((int) body.get(2).getProfit()));
+                        setStatus(seongsu, seongsuProfit);
 
                         zzangsuSeed.setText(Integer.toString((int) body.get(1).getSeed()));
                         zzangsuRate.setText(String.valueOf( body.get(1).getRate()));
                         zzangsuBalance.setText(Integer.toString((int) body.get(1).getBalance()));
                         zzangsuProfit.setText(Integer.toString((int) body.get(1).getProfit()));
+                        setStatus(zzangsu, zzangsuProfit);
 
                         int[] profitList = {Integer.parseInt(kyubeomProfit.getText().toString()), Integer.parseInt(seongsuProfit.getText().toString()), Integer.parseInt(zzangsuProfit.getText().toString())};
                         setTrophy(profitList);
@@ -454,6 +463,17 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    public void setStatus(Gambler gambler, TextView tv) {
+        int totalProfit = Integer.valueOf(tv.getText().toString());
+        for (int i=0; i < gambler.getStatusList().length; i++) {
+            if(totalProfit < gambler.getStatusValueList()[i]) {
+                gambler.setStatus(gambler.getStatusList()[i]);
+                Log.d(TAG, "gambler's status:" + gambler.getStatus());
+                break;
+            }
+        }
+    }
+
     // 팝업 설정 메소드
     public void setChangeDialog() {
         currentDialog = new AlertDialog.Builder(getContext());
@@ -486,6 +506,7 @@ public class DashboardFragment extends Fragment {
         currentDialog.setMessage("얼마를 가지고 있나요?");   // 내용 설정
 
         final EditText et = new EditText(getContext());
+        et.setInputType(InputType.TYPE_CLASS_NUMBER);
         currentDialog.setView(et);
 
         currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
@@ -518,44 +539,29 @@ public class DashboardFragment extends Fragment {
         currentDialog.show();
     }
 
-//    public void setCommissionDialog() {
-//        currentDialog = new AlertDialog.Builder(getContext());
-//
-//        currentDialog.setTitle("짱수를");       // 제목 설정
-//        currentDialog.setMessage("구해라!");   // 내용 설정
-//
-//        final EditText et = new EditText(getContext());
-//        currentDialog.setView(et);
-//
-//        currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Log.v(TAG, "Yes Btn Click");
-//
-//                // Text 값 받아서 로그 남기기
-//                String value = et.getText().toString();
-//                Log.v(TAG, value);
-//
-//                HashMap<String, Object> payload = new HashMap<>();
-//                payload.put("commission", value);
-//
-//                setCommission(payload);
-//
-//                dialog.dismiss();     //닫기
-//                // Event
-//            }
-//        });
-//
-//        currentDialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Log.v(TAG,"No Btn Click");
-//                dialog.dismiss();     //닫기
-//                // Event
-//            }
-//        });
-//        currentDialog.show();
-//    }
+    public void setStatusDialog(Gambler gambler) {
+        currentDialog = new AlertDialog.Builder(getContext());
+
+        currentDialog.setTitle("상태 확인");       // 제목 설정
+//        currentDialog.setMessage();   // 내용 설정
+
+        final EditText et = new EditText(getContext());
+        et.setText(gambler.getStatus());
+        currentDialog.setView(et);
+
+        currentDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Text 값 받아서 로그 남기기
+                String value = et.getText().toString();
+                Log.v(TAG, value);
+
+                dialog.dismiss();     //닫기
+                // Event
+            }
+        });
+        currentDialog.show();
+    }
 
     public void setSeedDialog() {
         currentDialog = new AlertDialog.Builder(getContext());
@@ -567,12 +573,15 @@ public class DashboardFragment extends Fragment {
         layout.setOrientation(LinearLayout.HORIZONTAL);
 
         final EditText kb = new EditText(getContext());
+        kb.setInputType(InputType.TYPE_CLASS_NUMBER);
         kb.setHint("규범");
         layout.addView(kb);
         final EditText ss = new EditText(getContext());
+        ss.setInputType(InputType.TYPE_CLASS_NUMBER);
         ss.setHint("성수");
         layout.addView(ss);
         final EditText zs = new EditText(getContext());
+        zs.setInputType(InputType.TYPE_CLASS_NUMBER);
         zs.setHint("짱수");
         layout.addView(zs);
 
@@ -625,9 +634,14 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        kyubeom = new Gambler(0);
-        seongsu = new Gambler(0);
-        zzangsu = new Gambler(0);
+        String[] kyubeomStatusList = {getString(R.string.status_1_kyubeom), getString(R.string.status_2_kyubeom), getString(R.string.status_3_kyubeom), getString(R.string.status_4_kyubeom), getString(R.string.status_5_kyubeom), getString(R.string.status_6_kyubeom), getString(R.string.status_7_kyubeom), getString(R.string.status_8_kyubeom)};
+        String[] seongsuStatusList = {getString(R.string.status_1_seongsu), getString(R.string.status_2_seongsu), getString(R.string.status_3_seongsu), getString(R.string.status_4_seongsu), getString(R.string.status_5_seongsu), getString(R.string.status_6_seongsu), getString(R.string.status_7_seongsu), getString(R.string.status_8_seongsu)};
+        String[] zzangsuStatusList = {getString(R.string.status_1_zzangsu), getString(R.string.status_2_zzangsu), getString(R.string.status_3_zzangsu), getString(R.string.status_4_zzangsu), getString(R.string.status_5_zzangsu), getString(R.string.status_6_zzangsu), getString(R.string.status_7_zzangsu), getString(R.string.status_8_zzangsu)};
+
+
+        kyubeom = new Gambler(0, getString(R.string.default_status_kyubeom), kyubeomStatusList, kyubeomStatusValueList);
+        seongsu = new Gambler(0, getString(R.string.default_status_seongsu), seongsuStatusList, seongsuStatusValueList);
+        zzangsu = new Gambler(0, getString(R.string.default_status_zzangsu), zzangsuStatusList, zzangsuStatusValueList);
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(RetrofitExService.URL)
@@ -715,65 +729,46 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        kyubeomImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                kyubeom.addStack(1);
-                moveGambler(kyubeomImage, gamblerUpPixel);
-                createMoney(R.id.v_kyubeom, kyubeom.getStack());
-                Log.d(TAG, "onClick: kyubeom's stack: " + kyubeom.getStack());
-            }
-        });
+//        kyubeomImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                kyubeom.addStack(1);
+//                moveGambler(kyubeomImage, gamblerUpPixel);
+//                createMoney(R.id.v_kyubeom, kyubeom.getStack());
+//                Log.d(TAG, "onClick: kyubeom's stack: " + kyubeom.getStack());
+//            }
+//        });
 
         kyubeomImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                moveGambler(kyubeomImage, gamblerDownPixel);
-                kyubeom.addStack(-1);
-//                deleteMoney(R.id.v_kyubeom, kyubeom.getStack(), 1000);
-                Log.d(TAG, "onClick: kyubeom's stack: " + kyubeom.getStack());
+//                setStatusDialog(kyubeom);
                 return true;
             }
         });
 
-        seongsuImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seongsu.addStack(1);
-                moveGambler(seongsuImage, gamblerUpPixel);
-                createMoney(R.id.v_seongsu, seongsu.getStack());
-                Log.d(TAG, "onClick: seongsu's stack: " + seongsu.getStack());
-            }
-        });
+//        seongsuImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//            }
+//        });
 
         seongsuImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                moveGambler(seongsuImage, gamblerDownPixel);
-                seongsu.addStack(-1);
-//                deleteMoney(R.id.v_seongsu, seongsu.getStack(),1000);
-                Log.d(TAG, "onClick: seongsu's stack: " + seongsu.getStack());
                 return true;
             }
         });
 
-        zzangsuImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zzangsu.addStack(1);
-                moveGambler(zzangsuImage, gamblerUpPixel);
-                createMoney(R.id.v_zzangsu, zzangsu.getStack());
-                Log.d(TAG, "onClick: zzangsu's stack: " + zzangsu.getStack());
-            }
-        });
+//        zzangsuImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//            }
+//        });
 
         zzangsuImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                moveGambler(zzangsuImage, gamblerDownPixel);
-                zzangsu.addStack(-1);
-//                deleteMoney(R.id.v_zzangsu, zzangsu.getStack(), 1000);
-                Log.d(TAG, "onClick: zzangsu's stack: " + zzangsu.getStack());
                 return true;
             }
         });

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -160,6 +161,7 @@ public class CalculateFragment extends Fragment {
         currentDialog.setMessage("구해라!");   // 내용 설정
 
         final EditText et = new EditText(getContext());
+        et.setInputType(InputType.TYPE_CLASS_NUMBER);
         currentDialog.setView(et);
 
         currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {
@@ -199,6 +201,7 @@ public class CalculateFragment extends Fragment {
         currentDialog.setMessage("얼마입니까?");   // 내용 설정
 
         final EditText et = new EditText(getContext());
+        et.setInputType(InputType.TYPE_CLASS_NUMBER);
         currentDialog.setView(et);
 
         currentDialog.setPositiveButton("변경", new DialogInterface.OnClickListener() {

@@ -2,4 +2,35 @@
     <string name="app_name">Erection</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_status_kyubeom">규범는(은) 다소 피곤해 보인다. 무언가를 매우 열심히 한 듯 하다. </string>
+    <string name="status_8_kyubeom">규범는(은) 매우 거만해졌다!</string>
+    <string name="status_7_kyubeom">규범는(은) 눈이 아프지만, 시력을 포기할 각오가 되어있는 듯 하다. </string>
+    <string name="status_6_kyubeom">규범는(은) 얼굴에 웃음이 떠나질 않는다. </string>
+    <string name="status_5_kyubeom">규범는(은) 약간은 긴장 돼 보인다. </string>
+    <string name="status_4_kyubeom">규범는(은) 조금 불안 해 보인다.</string>규범는(은)
+    <string name="status_3_kyubeom">규범는(은) 성수를 원망하는 것 같다. </string>
+    <string name="status_2_kyubeom">규범는(은) 욕설을 자주 하기 시작했다. </string>
+    <string name="status_1_kyubeom">규범는(은) 말수가 급격히 줄어들었다. 아마 절망한 듯 하다. </string>
+    <string name="hint_kyubeom">규범은 앱 내에서 ‘3’자리 중 가장 왼쪽에 있다.</string>
+
+    <string name="default_status_seongsu">성수는(은) 기대감에 찬 모습이다. 하지만 약간은 긴장한 듯 하다. </string>
+    <string name="status_8_seongsu">성수는(은) 품에서 ‘사직서’라고 적힌 봉투를 꺼냈다.</string>
+    <string name="status_7_seongsu">성수는(은) 매우 흥분한 듯 하다!</string>
+    <string name="status_6_seongsu">성수는(은) 말했다. “봐 된다니까 시발새끼들아!”</string>
+    <string name="status_5_seongsu">성수는(은) 희미한 미소를 띄고있다.</string>
+    <string name="status_4_seongsu">성수는(은) 아직은 여유로운 모습이다.</string>
+    <string name="status_3_seongsu">성수는(은) “괜찮아”라고 말하는 빈도가 높아졌다. </string>
+    <string name="status_2_seongsu">성수는(은) 주머니 속 카드를 만지작 거리고 있다. </string>
+    <string name="status_1_seongsu">성수는(은) 그 때, 먼 평행우주 혹은 전생의 자신이 소리치는 것을 들었다. 그는 울고있는 듯 하다.</string>
+    <string name="hint_seongsu">이 앱의 이름은 dotnam, 한글로 “도트남” 세 글자 이다. </string>
+
+    <string name="default_status_zzangsu">짱수는(은) 베트남에서도 쌀국수를 “특”으로 파는지 궁금해 하는 듯 하다. 물론 풀떼기는 빼고. </string>
+    <string name="status_8_zzangsu">짱수는(은) 본인 판을 접고 ‘짱수’하기 시작했다!</string>
+    <string name="status_7_zzangsu">짱수는(은) 성수에게 다소 자주 현황을 묻기 시작했다.</string>
+    <string name="status_6_zzangsu">짱수는(은) 집중력을 잃은 듯 하다.</string>
+    <string name="status_5_zzangsu">짱수는(은) 설레어하는 듯 하다</string>
+    <string name="status_4_zzangsu">짱수는(은) 아직은 괜찮아 보인다. 그는 빅보스다.</string>
+    <string name="status_3_zzangsu">짱수는(은) 조금 불안해 보인다. 간혹 욕설을 하는 듯 하다</string>
+    <string name="status_2_zzangsu">짱수는(은) 난동을 피우기 시작했다</string>
+    <string name="status_1_zzangsu">짱수는(은) 건강이 악화되었다</string>
 </resources>

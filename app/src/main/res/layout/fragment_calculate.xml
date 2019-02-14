@@ -93,6 +93,7 @@
                 android:layout_margin="1dp"
                 android:fontFamily="@font/nougat_extrablack_webfont"
                 android:gravity="center"
+                android:inputType="number"
                 android:text="0"
                 android:textColor="#000000"
                 android:textSize="24sp" />
@@ -139,6 +140,7 @@
                 android:layout_margin="1dp"
                 android:fontFamily="@font/nougat_extrablack_webfont"
                 android:gravity="center"
+                android:inputType="number"
                 android:text="0"
                 android:textColor="#000000"
                 android:textSize="24sp" />
@@ -185,6 +187,7 @@
                 android:layout_margin="1dp"
                 android:fontFamily="@font/nougat_extrablack_webfont"
                 android:gravity="center"
+                android:inputType="number"
                 android:text="0"
                 android:textColor="#000000"
                 android:textSize="24sp" />
