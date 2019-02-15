@@ -126,7 +126,7 @@ public class CalculateFragment extends Fragment {
                 if ((reportLabel.getVirtualChildCount()-2) < response.body().size() ){
                     for (int i=(reportLabel.getVirtualChildCount()-2); i<response.body().size(); i++) {
                         TextView tv = new TextView(getContext());
-                        tv.setText(response.body().get(i).getDate());
+                        tv.setText(response.body().get(i).getDate().substring(3,8));
                         tv.setGravity(Gravity.CENTER);
                         tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
                         tv.setTextColor(Color.BLACK);
@@ -198,8 +198,8 @@ public class CalculateFragment extends Fragment {
     public void setCommissionDialog() {
         currentDialog = new AlertDialog.Builder(getContext());
 
-        currentDialog.setTitle("짱수를");       // 제목 설정
-        currentDialog.setMessage("구해라!");   // 내용 설정
+        currentDialog.setTitle("짱수의 기색을 살피며..");       // 제목 설정
+        currentDialog.setMessage("수수료를 바꾸자!");   // 내용 설정
 
         final EditText et = new EditText(getContext());
         et.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -212,7 +212,8 @@ public class CalculateFragment extends Fragment {
                 Log.v(TAG, "Yes Btn Click");
 
                 // Text 값 받아서 로그 남기기
-                String value = et.getText().toString();
+                String value = et.getText().toString().equals("") ? "0" : et.getText().toString();
+
                 Log.v(TAG, value);
 
                 HashMap<String, Object> payload = new HashMap<>();
@@ -252,7 +253,7 @@ public class CalculateFragment extends Fragment {
                 Log.v(TAG, "Yes Btn Click");
 
                 // Text 값 받아서 로그 남기기
-                String value = et.getText().toString().equals("") ? "10" : et.getText().toString();
+                String value = et.getText().toString().equals("") || et.getText().toString().equals("0") ? "10" : et.getText().toString();
 
                 DashboardFragment.valueOfStack=Integer.valueOf(value);
                 getCalculateData();
