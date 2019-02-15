@@ -130,7 +130,7 @@ public class CalculateFragment extends Fragment {
                         tv.setGravity(Gravity.CENTER);
                         tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
                         tv.setTextColor(Color.BLACK);
-                        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         reportLabel.addView(tv, i+1);
 
                         TextView kbtv = new TextView(getContext());
@@ -138,7 +138,7 @@ public class CalculateFragment extends Fragment {
                         kbtv.setGravity(Gravity.CENTER);
                         kbtv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
                         kbtv.setTextColor(Color.BLACK);
-                        kbtv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        kbtv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         reportKyubeom.addView(kbtv, i+1);
 
                         TextView sstv = new TextView(getContext());
@@ -146,7 +146,7 @@ public class CalculateFragment extends Fragment {
                         sstv.setGravity(Gravity.CENTER);
                         sstv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
                         sstv.setTextColor(Color.BLACK);
-                        sstv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        sstv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         reportSeongsu.addView(sstv, i+1);
 
                         TextView zstv = new TextView(getContext());
@@ -154,7 +154,7 @@ public class CalculateFragment extends Fragment {
                         zstv.setGravity(Gravity.CENTER);
                         zstv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/nougat_extrablack_webfont.ttf"));
                         zstv.setTextColor(Color.BLACK);
-                        zstv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                        zstv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         reportZzangsu.addView(zstv, i+1);
                     }
                 } else {
